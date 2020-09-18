@@ -5,6 +5,8 @@
 /dist/
 /my_feed.egg-info/
 
+examples/config.cfg
+
 *.pyc
 *.swp
 *.cfg
