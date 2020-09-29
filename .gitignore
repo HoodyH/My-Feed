@@ -6,6 +6,7 @@
 /my_feed.egg-info/
 
 examples/config.cfg
+examples/img/
 test/config.cfg
 
 *.pyc
