@@ -25,3 +25,27 @@ class PostModel:
         Append a new media to the Post
         """
         self.media.append(MediaModel(media_id, media_url, media_type))
+
+    @property
+    def is_text(self):
+        if self.type == PostType.TEXT:
+            return True
+        return False
+
+    @property
+    def is_embed(self):
+        if self.type == PostType.EMBED:
+            return True
+        return False
+
+    @property
+    def is_image(self):
+        if self.media and self.type == PostType.IMAGE:
+            return True
+        return False
+
+    @property
+    def is_none(self):
+        if self.type == PostType.NONE:
+            return True
+        return False
