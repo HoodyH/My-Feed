@@ -1,10 +1,25 @@
+from enum import Enum
 from datetime import datetime, timedelta
+
 from my_feed.platforms.reddit import Reddit
+
+
+class Platforms(Enum):
+    REDDIT = Reddit
+    INSTAGRAM = None
 
 
 class Channel:
 
-    def __init__(self, target):
+    def __init__(self, platform: Platforms, target: str):
+
+        # in case of a non existing channel set as disabled, so it will not update
+        self.is_enabled = True
+
+        # The platform update type (reddit, instagram, etc)
+        self.platform = platform
+        self.updater = platform.value  # the updater Class
+
         # initialize last update with an old time
         self.last_update: datetime = datetime.now() - timedelta(hours=5)
 
@@ -18,44 +33,22 @@ class Channel:
         # the channel specification, this must match che update requirements in the platform api
         self.target: str = target
 
-        # where to send back the updated data
-        # TODO: implement as multi-endpoint system (discord, telegram)
-        self.endpoints: list = []
+        # the exact time when the update start, to save it later
+        self.updated_time = None
 
-
-class Updater:
-
-    def __init__(self):
-
-        # for efficiency use one array per platform, so you can update all un once
-        # recycling the api object
-        self.__reddit_feed = []
-
-    def add_reddit_channel(self, target):
-        """
-        Add a reddit channel where update from.
-        :param target: the name of the channel (eg: 'Anime' for reddit)
-        """
-        self.__reddit_feed.append(Channel(target))
+    @property
+    def is_time_to_update(self):
+        if datetime.now() - self.last_update > timedelta(minutes=self.update_interval) and self.is_enabled:
+            return True
+        return False
 
     def update(self):
-        """
-        perform the update for each platform
-        :return: a List of Updates
-        """
-        out = []
-
-        reddit = Reddit()
-
-        for channel in self.__reddit_feed:
-            channel: Channel
-
-            now = datetime.now()
-            if now - channel.last_update > timedelta(minutes=channel.update_interval):
-                # get the data for the current channel
-                out += reddit.update(channel.target, channel.last_update_id)
-                # update the last id
-                channel.last_update_id = reddit.last_post_id
-                # channel.last_update = now
-
+        updater = self.updater()  # create the class
+        out = updater.update(self.target, self.last_update_id)
+        self.updated_time = datetime.now()
         return out
+
+    def set_last_update_now(self):
+        # update the last id
+        self.last_update_id = self.updater.last_post_id
+        self.last_update = self.updated_time

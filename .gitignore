@@ -6,6 +6,7 @@
 /my_feed.egg-info/
 
 examples/config.cfg
+test/config.cfg
 
 *.pyc
 *.swp
