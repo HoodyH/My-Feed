@@ -4,11 +4,16 @@ from datetime import datetime, timedelta
 
 from my_feed.modules.post import PostModel
 from my_feed.platforms.reddit import Reddit
+from my_feed.platforms.instagram import Instagram
+# from my_feed.platforms.twitter import Twitter
 
 
+# To ad a new social add a new entry on the enum
+# they will be automatically handled
 class Platforms(Enum):
     REDDIT = Reddit
-    INSTAGRAM = None
+    INSTAGRAM = Instagram
+    # TWITTER = Twitter
 
 
 class Channel:
@@ -28,7 +33,7 @@ class Channel:
         self.__temp_last_update = None
 
         # update the data every minutes interval
-        self.update_interval: int = 5
+        self.update_interval: int = 1
 
         # how to identify the last update, to not send again the same data
         # this value can be a string, slug, or int based on the platform that you are using

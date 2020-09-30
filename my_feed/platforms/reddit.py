@@ -114,14 +114,7 @@ class Reddit(PlatformInterface):
         :return: a list of feed data
         """
         data = self.__request_data(r, last_update_id)
-        feed = self.__build_feed(data)
-        # update the last_post_id with the first post in the chunk
-        if feed:
-            # the feed is al list of post
-            # Get the first (the newest) and make it the last post id
-            self._last_post_id = feed[0].id
-        else:
-            # if there are no new posts keep the current one
-            self._last_post_id = last_update_id
+        self._feed = self.__build_feed(data)
+        self._update_last_post_id(last_update_id)
 
-        return feed
+        return self._feed

@@ -45,6 +45,12 @@ class PostModel:
         return False
 
     @property
+    def is_video(self) -> bool:
+        if self.media and self.type == PostType.VIDEO:
+            return True
+        return False
+
+    @property
     def is_none(self) -> bool:
         if self.type == PostType.NONE:
             return True

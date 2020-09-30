@@ -1,6 +1,9 @@
 import configparser as cfg
 import tweepy
 
+from my_feed.platforms import PlatformInterface
+from my_feed.modules.post import PostModel
+
 
 parser = cfg.ConfigParser()
 try:
@@ -14,9 +17,11 @@ ACCESS_TOKEN = parser.get('twitter', 'ACCESS_TOKEN')
 ACCESS_TOKEN_SECRET = parser.get('twitter', 'ACCESS_TOKEN_SECRET')
 
 
-class Twitter:
+class Twitter(PlatformInterface):
 
     def __init__(self):
+        super().__init__()
+
         # Authenticate to Twitter
         self.auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
         self.auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
@@ -35,5 +40,5 @@ class Twitter:
         for tweet in self.api.user_timeline(id="spacex"):  # since_id=1111
             print(f"{tweet.user.name}:{tweet.text}:{tweet.entities}")
 
-    def update(self, r, last_update_id):
+    def update(self, target, last_update_id):
         pass

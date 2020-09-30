@@ -7,6 +7,7 @@ class PostType(Enum):
     """
     EMBED = 'Embed'
     IMAGE = 'Image'
+    VIDEO = 'Video'
     TEXT = 'Text'
     NONE = None
 

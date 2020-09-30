@@ -31,6 +31,11 @@ def channel_update(channel: Channel):
             print(post.type, post.title)
             continue
 
+        if post.media and post.type == PostType.VIDEO:
+            for media in post.media:
+                media: MediaModel
+                print(post.type, post.id, media.url)
+
         if post.media and post.type == PostType.IMAGE:
             for media in post.media:
                 media: MediaModel
@@ -48,14 +53,12 @@ def channel_update(channel: Channel):
 
 if __name__ == '__main__':
 
-    channel0 = Channel(Platforms.REDDIT, 'BelleDelphinePatreon')
-    channel1 = Channel(Platforms.REDDIT, 'hentai')
-
-    # u.add_reddit_channel('relationship_advice')
-    # u.add_reddit_channel('videos')
-    # u.add_reddit_channel('PublicFreakout')
+    # channel0 = Channel(Platforms.REDDIT, 'videos')
+    # channel1 = Channel(Platforms.REDDIT, 'anime')
+    # channel0 = Channel(Platforms.INSTAGRAM, '7116996642')  # 'spotted_uniud'
+    channel1 = Channel(Platforms.INSTAGRAM, '4361837093')  # 'foodpoornitalia' 5925898947
 
     while True:
-        channel_update(channel0)
+        # channel_update(channel0)
         channel_update(channel1)
         sleep(300)
