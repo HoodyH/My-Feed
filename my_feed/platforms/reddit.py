@@ -12,7 +12,9 @@ HEADER = {'User-agent': 'bot'}
 class Reddit:
 
     class __RedditPostTypes(Enum):
+        SELF = 'self'
         REDDIT_VIDEO = 'reddit:video'
+        HOSTED_VIDEO = 'hosted:video'
         VIDEO = 'rich:video'
         IMAGE = 'image'
         LINK = 'link'
@@ -74,7 +76,7 @@ class Reddit:
             try:
                 post_type_hint = self.__RedditPostTypes(post_hint)
             except Exception as exc:
-                print(post_hint, exc)
+                print(exc)
                 post_type_hint = self.__RedditPostTypes.NONE
 
             # the post has video extract the video

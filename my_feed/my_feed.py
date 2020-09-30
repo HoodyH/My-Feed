@@ -28,7 +28,7 @@ class Channel:
         self.__temp_last_update = None
 
         # update the data every minutes interval
-        self.update_interval: int = 30
+        self.update_interval: int = 5
 
         # how to identify the last update, to not send again the same data
         # this value can be a string, slug, or int based on the platform that you are using
@@ -38,8 +38,6 @@ class Channel:
 
         # the channel specification, this must match che update requirements in the platform api
         self.target: str = target
-
-
 
     @property
     def is_time_to_update(self) -> bool:

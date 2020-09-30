@@ -1,12 +1,12 @@
+from typing import List
 from .types import PostType
 
 
 class MediaModel:
 
-    def __init__(self, media_id, url, media_type):
+    def __init__(self, media_id, url):
         self.id = media_id
-        self.url = url
-        self.type = media_type
+        self.url: str = url
 
 
 class PostModel:
@@ -17,35 +17,35 @@ class PostModel:
         self.type: PostType = PostType.NONE
         self.created_at: str = created_at
         self.url: str = url
-        self.media: list = []
+        self.media: List[MediaModel] = []
         self.description: str = ''
 
-    def add_media(self, media_id, media_url, media_type=None):
+    def add_media(self, media_id, media_url) -> None:
         """
         Append a new media to the Post
         """
-        self.media.append(MediaModel(media_id, media_url, media_type))
+        self.media.append(MediaModel(media_id, media_url))
 
     @property
-    def is_text(self):
+    def is_text(self) -> bool:
         if self.type == PostType.TEXT:
             return True
         return False
 
     @property
-    def is_embed(self):
+    def is_embed(self) -> bool:
         if self.type == PostType.EMBED:
             return True
         return False
 
     @property
-    def is_image(self):
+    def is_image(self) -> bool:
         if self.media and self.type == PostType.IMAGE:
             return True
         return False
 
     @property
-    def is_none(self):
+    def is_none(self) -> bool:
         if self.type == PostType.NONE:
             return True
         return False
