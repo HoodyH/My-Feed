@@ -2,6 +2,7 @@ import json
 import requests
 from enum import Enum
 
+from my_feed.platforms import PlatformInterface
 from my_feed.modules.post import PostModel
 from my_feed.modules.types import PostType
 
@@ -9,7 +10,7 @@ from my_feed.modules.types import PostType
 HEADER = {'User-agent': 'bot'}
 
 
-class Reddit:
+class Reddit(PlatformInterface):
 
     class __RedditPostTypes(Enum):
         SELF = 'self'
@@ -21,16 +22,7 @@ class Reddit:
         NONE = None
 
     def __init__(self):
-        self.__last_post_id = None  # reddit 'Fullname' ID of the last post get
-
-    @property
-    def last_post_id(self):
-        """
-        The the last post Id
-        This property must be get after the update
-        :return: a slug ID
-        """
-        return self.__last_post_id
+        super().__init__()
 
     @staticmethod
     def __request_data(r, before=None):
@@ -127,9 +119,9 @@ class Reddit:
         if feed:
             # the feed is al list of post
             # Get the first (the newest) and make it the last post id
-            self.__last_post_id = feed[0].id
+            self._last_post_id = feed[0].id
         else:
             # if there are no new posts keep the current one
-            self.__last_post_id = last_update_id
+            self._last_post_id = last_update_id
 
         return feed
