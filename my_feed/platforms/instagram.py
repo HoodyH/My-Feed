@@ -49,13 +49,17 @@ class Instagram(PlatformInterface):
         for item in items:
             node = item.get('node')
 
+            post_id = node.get('shortcode')
+            if post_id == last_update_id:
+                break
+
             caption = node.get('caption', {})
             text = ''
             if caption:
                 text = caption.get('text', '')
 
             post = PostModel(
-                post_id=node.get('shortcode'),
+                post_id=post_id,
                 title=text,
                 created_at=node.get('created_time'),
                 url=f'https://www.reddit.com{node.get("link")}'
@@ -92,7 +96,18 @@ class Instagram(PlatformInterface):
 
     def update(self, target, last_update_id):
 
-        self._feed = self.post(target, last_update_id)
-        self._update_last_post_id(last_update_id)
+        # decouple the last update id
+        last_update_id_story, last_update_id_post = last_update_id
 
+        post_feed = self.post(target, last_update_id_post)
+
+        # get the post id from the feed
+        # last_update_id_story = self._get_last_post_id(story_feed, last_update_id_story)
+        last_update_id_post = self._get_last_post_id(post_feed, last_update_id_post)
+
+        # the set feed will also revert it
+        self._set_feed(post_feed)
+
+        # update the post id
+        self._last_post_id = (last_update_id_story, last_update_id_post)
         return self._feed

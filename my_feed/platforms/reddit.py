@@ -25,18 +25,15 @@ class Reddit(PlatformInterface):
         super().__init__()
 
     @staticmethod
-    def __request_data(r, before=None):
+    def __request_data(r):
         """
         Call the reddit api for the data
         :param r: the sub-reddit
-        :param before: the last post id received (eg: t1-sxsdfew")
         :return: the data as dictionary
         :raise ConnectionError: if the api don't respond with a 200
         """
 
-        url = 'https://www.reddit.com/r/%s/new.json?limit=20' % r
-        if before:
-            url = 'https://www.reddit.com/r/%s/new.json?before=%s' % (r, before)
+        url = f'https://www.reddit.com/r/{r}/new.json?limit=20'
 
         res = requests.get(url, headers=HEADER)
         if res.status_code == 200:
@@ -45,7 +42,12 @@ class Reddit(PlatformInterface):
         else:
             raise ConnectionError
 
-    def __build_feed(self, feed_data):
+    def __build_feed(self, feed_data, last_update_id):
+        """
+        :param feed_data: the data coming from the reddit api
+        :param last_update_id: the last post id received (eg: t1-sxsdfew")
+        :return: list of feed
+        """
 
         out = []
         posts = feed_data.get('children')
@@ -54,10 +56,15 @@ class Reddit(PlatformInterface):
 
             data = el.get('data')
 
+            # check if the last post is the recent one
+            post_id = data.get('name')
+            if post_id == last_update_id:
+                break
+
             # create the std post object
             # with the base data
             post = PostModel(
-                post_id=data.get('name'),
+                post_id=post_id,
                 title=data.get('title'),
                 created_at=data.get('created_utc'),
                 url='https://www.reddit.com%s' % data.get('permalink')
@@ -113,8 +120,15 @@ class Reddit(PlatformInterface):
         :param last_update_id: the id of the last known post
         :return: a list of feed data
         """
-        data = self.__request_data(r, last_update_id)
-        self._feed = self.__build_feed(data)
-        self._update_last_post_id(last_update_id)
+        data = self.__request_data(r)
+        feed = self.__build_feed(data, last_update_id)
+
+        # get the post id from the feed
+        last_post_id = self._get_last_post_id(feed, last_update_id)
+
+        # the set feed will also revert it
+        self._set_feed(feed)
+        # update the post id
+        self._last_post_id = last_post_id
 
         return self._feed

@@ -36,7 +36,7 @@ class Channel:
         self.update_interval: int = 1
 
         # how to identify the last update, to not send again the same data
-        # this value can be a string, slug, or int based on the platform that you are using
+        # this value can be a string, slug, int or tuple based on the platform that you are using
         self.last_update_id = None
         # temporally save the last update id
         self.__temp_last_update_id = None
