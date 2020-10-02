@@ -33,7 +33,7 @@ class Reddit(PlatformInterface):
         :raise ConnectionError: if the api don't respond with a 200
         """
 
-        url = f'https://www.reddit.com/r/{r}/new.json?limit=20'
+        url = f'https://www.reddit.com/r/{r}/hot.json?limit=15'
 
         res = requests.get(url, headers=HEADER)
         if res.status_code == 200:

@@ -54,11 +54,12 @@ def channel_update(channel: Channel):
 if __name__ == '__main__':
 
     # channel0 = Channel(Platforms.REDDIT, 'videos')
-    channel1 = Channel(Platforms.REDDIT, 'hentai')
+    channel1 = Channel(Platforms.INSTAGRAM, '39370396767')  # 39370396767
     # channel0 = Channel(Platforms.INSTAGRAM, '7116996642')  # 'spotted_uniud'
     # channel1 = Channel(Platforms.INSTAGRAM, '4361837093')  # 'foodpoornitalia' 5925898947
 
     while True:
         # channel_update(channel0)
+        print('update')
         channel_update(channel1)
         sleep(30)

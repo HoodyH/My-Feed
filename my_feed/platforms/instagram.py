@@ -97,8 +97,13 @@ class Instagram(PlatformInterface):
     def update(self, target, last_update_id):
 
         # decouple the last update id
-        last_update_id_story, last_update_id_post = last_update_id
+        # this cause instagram have 2 feed sources, stories and posts
+        last_update_id_story = None
+        last_update_id_post = None
+        if last_update_id:
+            last_update_id_story, last_update_id_post = last_update_id
 
+        # get the data from the api
         post_feed = self.post(target, last_update_id_post)
 
         # get the post id from the feed
