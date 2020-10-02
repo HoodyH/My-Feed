@@ -36,11 +36,21 @@ class Instagram(PlatformInterface):
         media = data.get('standard_resolution', {})
         return media.get('url')
 
+    def story(self, user_id, last_update_id):
+        """
+        story can be get only if you are logged in
+        Load all the stories from the user loaded
+        :return: InstagramStory list
+        """
+        pass
+        # story = self.api._story_feed(user_id)
+        # return story
+
     def post(self, user_id, last_update_id):
         """
         Get all the post from the user loaded
         Store them as a list of InstagramPost obj
-        :return: InstagramPosts array
+        :return: PostModel list
         """
         out = []
 
