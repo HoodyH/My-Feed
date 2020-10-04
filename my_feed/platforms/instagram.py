@@ -1,13 +1,12 @@
 import hashlib
 import string
 import random
-import pprint
 
 from instagram_web_api import (
     Client,
 )
 
-from my_feed.platforms import PlatformInterface
+from my_feed.platforms import PlatformInterface, PlatformsId
 from my_feed.modules.post import PostModel
 from my_feed.modules.types import PostType
 
@@ -30,6 +29,9 @@ class Instagram(PlatformInterface):
         super().__init__()
 
         self.api = MyClient(auto_patch=True, drop_incompat_keys=False)
+
+    def __repr__(self):
+        return PlatformsId.INSTAGRAM.value
 
     @staticmethod
     def get_media_url(data):
@@ -72,7 +74,7 @@ class Instagram(PlatformInterface):
                 post_id=post_id,
                 title=text,
                 created_at=node.get('created_time'),
-                url=f'https://www.reddit.com{node.get("link")}'
+                url=node.get("link")
             )
 
             post.type = PostType.IMAGE

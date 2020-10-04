@@ -1,6 +1,15 @@
 from abc import ABC, abstractmethod
+from enum import Enum
 from typing import List
 from my_feed.modules.post import PostModel
+
+
+# To ad a new social add a new entry on the enum
+# they will be automatically handled
+class PlatformsId(Enum):
+    REDDIT = 'reddit'
+    INSTAGRAM = 'instagram'
+    TWITTER = 'twitter'
 
 
 class PlatformInterface(ABC):
@@ -13,6 +22,13 @@ class PlatformInterface(ABC):
     def _set_feed(self, feed: List[PostModel]):
         self._feed = feed
         self._feed.reverse()
+
+    @abstractmethod
+    def __repr__(self) -> str:
+        """
+        :return: the str name of the platform from PlatformsId Enum
+        """
+        pass
 
     @staticmethod
     def _get_last_post_id(feed, last_update_id):

@@ -2,7 +2,7 @@ import json
 import requests
 from enum import Enum
 
-from my_feed.platforms import PlatformInterface
+from my_feed.platforms import PlatformInterface, PlatformsId
 from my_feed.modules.post import PostModel
 from my_feed.modules.types import PostType
 
@@ -24,6 +24,9 @@ class Reddit(PlatformInterface):
     def __init__(self):
         super().__init__()
 
+    def __repr__(self):
+        return PlatformsId.REDDIT.value
+
     @staticmethod
     def __request_data(r):
         """
@@ -33,7 +36,7 @@ class Reddit(PlatformInterface):
         :raise ConnectionError: if the api don't respond with a 200
         """
 
-        url = f'https://www.reddit.com/r/{r}/hot.json?limit=15'
+        url = f'https://www.reddit.com/r/{r}/top.json?limit=15'
 
         res = requests.get(url, headers=HEADER)
         if res.status_code == 200:

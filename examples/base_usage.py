@@ -1,6 +1,6 @@
 import requests
 from time import sleep
-from my_feed import Channel, Platforms
+from my_feed import Source, Platforms
 
 from my_feed.modules.post import PostModel, MediaModel
 from my_feed.modules.types import PostType
@@ -8,7 +8,7 @@ from my_feed.modules.types import PostType
 HEADER = {'User-agent': 'bot'}
 
 
-def channel_update(channel: Channel):
+def channel_update(channel: Source):
 
     if not channel.is_time_to_update:
         return
@@ -41,7 +41,8 @@ def channel_update(channel: Channel):
                 media: MediaModel
 
                 res = requests.get(media.url, headers=HEADER)
-                print(post.type, post.id, media.url)
+                caption = f'{post.title}\nVia {post.url}'
+                print(caption)
 
                 if res.status_code == 200:
                     with open('img/%s.jpg' % media.id, 'wb') as f:
@@ -53,13 +54,12 @@ def channel_update(channel: Channel):
 
 if __name__ == '__main__':
 
-    # channel0 = Channel(Platforms.REDDIT, 'videos')
-    channel1 = Channel(Platforms.INSTAGRAM, '39370396767')  # 39370396767
-    # channel0 = Channel(Platforms.INSTAGRAM, '7116996642')  # 'spotted_uniud'
-    # channel1 = Channel(Platforms.INSTAGRAM, '4361837093')  # 'foodpoornitalia' 5925898947
+    channel0 = Source(Platforms.REDDIT, 'youtubetitties')
+    # channel1 = Source(Platforms.REDDIT, 'anime')
+    # channel0 = Source(Platforms.INSTAGRAM, '4361837093')  # 7116996642
+    # channel1 = Source(Platforms.INSTAGRAM, '4361837093')  # 'foodpoornitalia' 5925898947
 
     while True:
-        # channel_update(channel0)
-        print('update')
-        channel_update(channel1)
+        channel_update(channel0)
+        # channel_update(channel1)
         sleep(30)

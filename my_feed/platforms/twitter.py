@@ -1,7 +1,7 @@
 import configparser as cfg
 import tweepy
 
-from my_feed.platforms import PlatformInterface
+from my_feed.platforms import PlatformInterface, PlatformsId
 from my_feed.modules.post import PostModel
 
 
@@ -34,6 +34,9 @@ class Twitter(PlatformInterface):
             print("Authentication OK")
         except Exception as exc:
             print("Error during authentication", exc)
+
+    def __repr__(self):
+        return PlatformsId.TWITTER.value
 
     def test(self):
 
