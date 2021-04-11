@@ -58,7 +58,7 @@ class Source:
         self.is_active = True
 
         # The platform update type (reddit, instagram, etc)
-        self.platform: str = platform.identifier.value
+        self.platform: PlatformsId = platform.identifier
         self.updater = platform.callable  # the updater Class
 
         # initialize last update with an old time
@@ -67,16 +67,19 @@ class Source:
         self.__temp_last_update = None
 
         # update the data every minutes interval
-        self.update_interval: int = 1
+        self.update_interval: int = 5
 
         # how to identify the last update, to not send again the same data
         # this value can be a string, slug, int or tuple based on the platform that you are using
-        self.last_update_id = None
+        self.__last_update_id = None
         # temporally save the last update id
         self.__temp_last_update_id = None
 
         # the channel specification, this must match che update requirements in the platform api
         self.id: str = channel_id
+
+    def __repr__(self):
+        return f'{self.platform.value}/{self.id}'
 
     @property
     def is_time_to_update(self) -> bool:
@@ -86,7 +89,7 @@ class Source:
 
     def update(self) -> List[PostModel]:
         updater = self.updater()  # create the class
-        out = updater.update(self.id, self.last_update_id)
+        out = updater.update(self.id, self.__last_update_id)
         self.__temp_last_update = datetime.now()
 
         # temporally save the last update id
@@ -94,12 +97,20 @@ class Source:
         self.__temp_last_update_id = updater.last_post_id
 
         # if is the first time the last_update_id is none, so dont show any post
-        if self.last_update_id:
+        if self.__last_update_id:
             return out
         else:
             return []
 
     def set_last_update_now(self) -> None:
         # update the last id, after all the operation on the data is done
-        self.last_update_id = self.__temp_last_update_id
+        self.__last_update_id = self.__temp_last_update_id
         self.last_update = self.__temp_last_update
+
+    def auto_update(self):
+        """Auto update the feed, this can be done also manually"""
+        out = []
+        if self.is_time_to_update:
+            out = self.update()
+            self.set_last_update_now()
+        return out

@@ -7,7 +7,7 @@ packages = find_packages(exclude=['tests*'])
 
 setup(
     name='my_feed',
-    version='0.0.3',
+    version='0.0.4',
     license='LGPLv3',
 
     author='SimoneABNto',
