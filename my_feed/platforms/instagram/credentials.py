@@ -23,7 +23,7 @@ class CredentialsManager:
         """
         self.credentials = []
 
-        _credentials = file_data.get('credentials')
+        _credentials = file_data.get('creds')
         for el in _credentials:
             key = list(el.keys())[0]
             self.credentials.append(self._UserCredentials(key, el[key]))

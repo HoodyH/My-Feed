@@ -87,6 +87,9 @@ class Source:
             return True
         return False
 
+    def reset_last_update_id(self):
+        self.__last_update_id = None
+
     def update(self) -> List[PostModel]:
         updater = self.updater()  # create the class
         out = updater.update(self.id, self.__last_update_id)

@@ -60,6 +60,7 @@ class Instagram(PlatformInterface):
             )
 
             media_type = MediaType(reel.get('type'))
+            post.type = PostType.VIDEO if media_type == MediaType.video else PostType.IMAGE
             media = reel.get('videos' if media_type == MediaType.video else 'images')
             post.add_media(media_id=None, media_url=self.get_media_url(media))
 
@@ -104,6 +105,7 @@ class Instagram(PlatformInterface):
             """
             carousel = item.get('carousel_media')
             media_type = MediaType(item.get('type'))
+            post.type = PostType.VIDEO if media_type == MediaType.video else PostType.IMAGE
             if carousel:
                 for c in carousel:
                     media = c.get('videos' if media_type == MediaType.video else 'images')
