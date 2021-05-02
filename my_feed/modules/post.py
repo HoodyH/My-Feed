@@ -4,9 +4,22 @@ from .types import PostType
 
 class MediaModel:
 
-    def __init__(self, media_id, url):
+    def __init__(self, media_id, url, media_type):
         self.id = media_id
         self.url: str = url
+        self.type: PostType = media_type
+
+    @property
+    def is_image(self) -> bool:
+        if self.type == PostType.IMAGE:
+            return True
+        return False
+
+    @property
+    def is_video(self) -> bool:
+        if self.type == PostType.VIDEO:
+            return True
+        return False
 
 
 class PostModel:
@@ -23,11 +36,11 @@ class PostModel:
     def __repr__(self):
         return f'{self.url}'
 
-    def add_media(self, media_id, media_url) -> None:
+    def add_media(self, media_id, media_url, media_type=PostType.NONE) -> None:
         """
         Append a new media to the Post
         """
-        self.media.append(MediaModel(media_id, media_url))
+        self.media.append(MediaModel(media_id, media_url, media_type))
 
     @property
     def is_text(self) -> bool:
@@ -50,6 +63,12 @@ class PostModel:
     @property
     def is_video(self) -> bool:
         if self.media and self.type == PostType.VIDEO:
+            return True
+        return False
+
+    @property
+    def is_story(self) -> bool:
+        if self.media and self.type == PostType.STORY:
             return True
         return False
 
