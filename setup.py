@@ -1,3 +1,5 @@
+import subprocess
+import os
 from setuptools import setup, find_packages
 
 with open('README.md', 'r') as fh:
@@ -5,18 +7,31 @@ with open('README.md', 'r') as fh:
 
 packages = find_packages(exclude=['tests*'])
 
+remote_version = (
+    subprocess.run(["git", "describe", "--tags"], stdout=subprocess.PIPE)
+    .stdout.decode("utf-8")
+    .strip()
+)
+
+assert "." in remote_version
+assert os.path.isfile("my_feed/version.py")
+
+with open("my_feed/VERSION", "w", encoding="utf-8") as fh:
+    fh.write(f"{remote_version}\n")
+
 setup(
     name='my_feed',
-    version='0.0.3',
+    version=remote_version,
     license='LGPLv3',
 
-    author='SimoneABNto',
+    author='HoodyH',
     description='A single service to get all your feed',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/SimoneABNto/My-Feed',
+    url='https://github.com/HoodyH/My-Feed',
 
     packages=packages,
+    package_data={"my_feed": ["VERSION"]},
     include_package_data=True,
 
     classifiers=[

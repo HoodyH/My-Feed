@@ -20,6 +20,9 @@ class PostModel:
         self.media: List[MediaModel] = []
         self.description: str = ''
 
+    def __repr__(self):
+        return f'{self.url}'
+
     def add_media(self, media_id, media_url) -> None:
         """
         Append a new media to the Post
