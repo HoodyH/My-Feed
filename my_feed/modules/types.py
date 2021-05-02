@@ -9,6 +9,7 @@ class PostType(Enum):
     IMAGE = 'Image'
     VIDEO = 'Video'
     TEXT = 'Text'
+    STORY = 'Story'
     NONE = None
 
     @staticmethod

@@ -31,6 +31,10 @@ class Instagram(PlatformInterface):
         media = media_data.get('standard_resolution', {})
         return media.get('url')
 
+    @staticmethod
+    def build_story_url(reel):
+        return f'https://www.instagram.com/stories/{reel.get("user", {}).get("username", "no")}/{reel.get("pk")}/'
+
     def story(self, user_id, last_update_id) -> [PostModel]:
         """
         story can be get only if you are logged in
@@ -46,25 +50,39 @@ class Instagram(PlatformInterface):
             return []
 
         reels = reels.get('items')
+        # reals are showed older first then reverse them
+        # to check the newers id first
+        reels.reverse()
+        latest_reel = reels[0]
+
+        # generate a single post with all the reels inside
+        post = PostModel(
+            post_id=latest_reel.get('id'),
+            title='',
+            created_at=latest_reel.get('taken_at'),
+            url=self.build_story_url(latest_reel)
+        )
+        post.type = PostType.STORY
+
         for reel in reels:
 
-            post_id = reel.get('pk')
+            post_id = reel.get('id')
             if post_id == last_update_id:
                 break
 
-            post = PostModel(
-                post_id=post_id,
-                title='',
-                created_at=reel.get('taken_at'),
-                url=reel.get('link')
+            media_type = MediaType(reel.get('type'))
+            media = reel.get('videos' if media_type == MediaType.video else 'images')
+            post.add_media(
+                media_id=None,
+                media_url=self.get_media_url(media),
+                media_type=PostType.VIDEO if media_type == MediaType.video else PostType.IMAGE
             )
 
-            media_type = MediaType(reel.get('type'))
-            post.type = PostType.VIDEO if media_type == MediaType.video else PostType.IMAGE
-            media = reel.get('videos' if media_type == MediaType.video else 'images')
-            post.add_media(media_id=None, media_url=self.get_media_url(media))
-
-            out.append(post)
+        if not post.media:
+            return []
+        # reals are showed older first then reverse them
+        post.media.reverse()
+        out.append(post)
 
         return out
 
